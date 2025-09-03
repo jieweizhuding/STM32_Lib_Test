@@ -108,13 +108,13 @@ int main()
 //     }
 // }
 
-void USART2_IRQHandler()
+void USART3_IRQHandler()
 {
     static uint8_t RX_State = 0;
     static uint8_t RX_Num = 0;
-    if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
+    if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET)
     {
-        char RX_DATA = USART_ReceiveData(USART2);
+        char RX_DATA = USART_ReceiveData(USART3);
         if (RX_State == 0)
         {
             if (RX_DATA == '@')
@@ -144,6 +144,6 @@ void USART2_IRQHandler()
                 Rec_Flag = 1;
             }
         }
-        USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+        USART_ClearITPendingBit(USART3, USART_IT_RXNE);
     }
 }

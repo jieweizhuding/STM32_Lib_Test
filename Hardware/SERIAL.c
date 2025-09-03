@@ -2,18 +2,18 @@
 
 void Serial_init()
 {
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
 
   GPIO_InitTypeDef GPIO_structure;
   GPIO_structure.GPIO_Mode = GPIO_Mode_AF_PP;
-  GPIO_structure.GPIO_Pin = GPIO_Pin_2;
+  GPIO_structure.GPIO_Pin = GPIO_Pin_10;
   GPIO_structure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_structure);
+  GPIO_Init(GPIOB, &GPIO_structure);
   GPIO_structure.GPIO_Mode = GPIO_Mode_IPU;
-  GPIO_structure.GPIO_Pin = GPIO_Pin_3;
+  GPIO_structure.GPIO_Pin = GPIO_Pin_11;
   GPIO_structure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOA, &GPIO_structure);
+  GPIO_Init(GPIOB, &GPIO_structure);
 
   USART_InitTypeDef USART_structure;
   USART_structure.USART_BaudRate = 115200;
@@ -22,25 +22,25 @@ void Serial_init()
   USART_structure.USART_Parity = USART_Parity_No;
   USART_structure.USART_StopBits = USART_StopBits_1;
   USART_structure.USART_WordLength = USART_WordLength_8b;
-  USART_Init(USART2, &USART_structure);
+  USART_Init(USART3, &USART_structure);
 
-  USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+  USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
 
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 
   NVIC_InitTypeDef NVIC_structure;
-  NVIC_structure.NVIC_IRQChannel = USART2_IRQn;
+  NVIC_structure.NVIC_IRQChannel = USART3_IRQn;
   NVIC_structure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_structure.NVIC_IRQChannelPreemptionPriority = 1;
   NVIC_structure.NVIC_IRQChannelSubPriority = 1;
   NVIC_Init(&NVIC_structure);
-  USART_Cmd(USART2, ENABLE);
+  USART_Cmd(USART3, ENABLE);
 }
 
 
 void Serial_SendByte(uint8_t Byte){
-    USART_SendData(USART2,Byte);
-    while(USART_GetFlagStatus(USART2,USART_FLAG_TXE)==RESET);
+    USART_SendData(USART3,Byte);
+    while(USART_GetFlagStatus(USART3,USART_FLAG_TXE)==RESET);
 }
 
 void Serial_SendInt(int32_t num){
