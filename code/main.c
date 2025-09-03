@@ -7,11 +7,13 @@
 // #include "SERIAL.h"
 
 #include "TIM.h"
-// #include "KF.h"
+#include "KF.h"
 
 MPU6050 mpu;
 MPU_Conv conv;
-// KF kf;
+KF kf;
+
+int i=0;
 
 // char Rec_Data[100];
 // uint8_t Rec_Flag = 0;
@@ -22,9 +24,9 @@ int main()
     TIM_init();
     OLED_Init();
 
-    // KF_setDt(&kf,0.01f);
-    // KF_init(&kf);
-    // KF_setup(&kf,&mpu, &conv);
+    KF_setDt(&kf,1.0f);
+    KF_init(&kf);
+    KF_setup(&kf,&mpu, &conv);
     // Serial_init();
 
 
@@ -44,6 +46,7 @@ int main()
         OLED_ShowFloatNum(30, 40, conv.GyroY_dps, 3,3, OLED_6X8);
         OLED_ShowString(0, 50, "GZ:", OLED_6X8);
         OLED_ShowFloatNum(30, 50, conv.GyroZ_dps, 3,3, OLED_6X8);
+        OLED_ShowNum(0, 60, i, 5, OLED_6X8);
         OLED_Update();
 
 
@@ -74,14 +77,14 @@ int main()
 
 
 
-// void TIM2_IRQHandler()
-// {
-//     if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
-//     {
-//         KF_update(&kf,&mpu, &conv);
-//         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-//     }
-// }
+void TIM2_IRQHandler()
+{
+    if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
+    {
+        KF_update(&kf,&mpu, &conv);
+        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+    }
+}
 
 // void USART3_IRQHandler()
 // {

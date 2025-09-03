@@ -52,8 +52,6 @@ void KF_setup(KF *kf,MPU6050 *mpu, MPU_Conv *conv)
 
 void KF_update(KF *kf,MPU6050 *mpu, MPU_Conv *conv)
 {
-  MPU_GetConv(mpu, conv);
-
   kf->roll_v = (conv->GyroX_dps - kf->gx_offset) +((sin(kf->k_pitch)*sin(kf->k_roll))/cos(kf->k_pitch))*(conv->GyroY_dps - kf->gy_offset) + ((sin(kf->k_pitch))*(cos(kf->k_roll))/cos(kf->k_pitch))*(conv->GyroZ_dps);
 
   kf->pitch_v = (cos(kf->k_roll))*(conv->GyroY_dps - kf->gy_offset) - (sin(kf->k_roll))*(conv->GyroZ_dps);
@@ -64,12 +62,10 @@ void KF_update(KF *kf,MPU6050 *mpu, MPU_Conv *conv)
   kf->gyro_pitch = kf->k_pitch+kf->pitch_v * kf->dt;
   kf->gyro_yaw   = kf->k_yaw   + kf->yaw_v   * kf->dt;
 
-
   kf->e_P[0][0] += 0.0025f;
   kf->e_P[0][1] += 0;
   kf->e_P[1][0] += 0;
   kf->e_P[1][1] += 0.0025f;
-
 
   kf->k_K[0][0] = kf->e_P[0][0] / (kf->e_P[0][0] + 0.3f);
   kf->k_K[0][1] = 0;
@@ -87,7 +83,6 @@ void KF_update(KF *kf,MPU6050 *mpu, MPU_Conv *conv)
   kf->e_P[0][1] = 0;
   kf->e_P[1][0] = 0;
   kf->e_P[1][1] = (1 - kf->k_K[1][1]) * kf->e_P[1][1];
-
 }
 
 void KF_setDt(KF *kf, float dt)
