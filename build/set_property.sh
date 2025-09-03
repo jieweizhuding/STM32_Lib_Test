@@ -1,0 +1,1 @@
+cmake -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=../toolchain/gcc-arm-none-eabi.cmake ..
