@@ -122,3 +122,15 @@ void MPU_GetRaw(MPU6050 *mpu)
   Data_L = MPU_readReg(MPU6050_GYRO_ZOUT_L);
   mpu->GyroZ = (Data_H << 8) | Data_L;
 }
+
+void MPU_GetConv(MPU6050 *mpu, MPU_Conv *conv)
+{
+  MPU_GetRaw(mpu);
+  conv->AccX_g = mpu->AccX / 16384.0f;   // 转换为 g 单位
+  conv->AccY_g = mpu->AccY / 16384.0f;
+  conv->AccZ_g = mpu->AccZ / 16384.0f;
+
+  conv->GyroX_dps = mpu->GyroX / 131.0f; // 转换为 °/s 单位
+  conv->GyroY_dps = mpu->GyroY / 131.0f;
+  conv->GyroZ_dps = mpu->GyroZ / 131.0f;
+}
