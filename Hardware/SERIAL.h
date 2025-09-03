@@ -8,8 +8,8 @@
 #include "stm32f10x_usart.h"
 #include "misc.h"
 
-
-// Initialize USART2: TX->PA2, RX->PA3, BaudRate=115200
+//经过测试，发现USART2默认连接在STLINK上，所以无法使用PA2、PA3连接USART2
+// Initialize USART3: TX->PB10, RX->PB11, BaudRate=115200
 void Serial_init();
 void Serial_SendByte(uint8_t byte);
 void Serial_SendString(char* str);

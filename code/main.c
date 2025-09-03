@@ -1,6 +1,6 @@
 // OK
-// //PA2,PA3
-#include "SERIAL.h"
+// //PB10,PB11
+// #include "SERIAL.h"
 
 // //PA0,PA1,PA6
 // #include "MOTOR.h"
@@ -17,12 +17,12 @@
 // 无
 // #include "TIM.h"
 // #include "PID.h"
-#include <string.h>
+// #include <string.h>
 
 
 //全局变量定义
-char Rec_Data[100];
-uint8_t Rec_Flag = 0;
+// char Rec_Data[100];
+// uint8_t Rec_Flag = 0;
 
 // PID motor_pid;
 // int16_t encoder_count = 0;
