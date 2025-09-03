@@ -13,7 +13,8 @@
         "oled.h": "c",
         "encoder.h": "c",
         "myi2c.h": "c",
-        "mpu6050.h": "c"
+        "mpu6050.h": "c",
+        "math.h": "c"
     },
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/lib/inc",

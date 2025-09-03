@@ -6,7 +6,7 @@
 #include "stm32f10x_rcc.h"
 #include "stm32f10x_i2c.h"
 #include "MPU6050.h"
-#include <math.h>
+#include "math.h"
 
 typedef struct{
   float ax_offset;
@@ -14,20 +14,24 @@ typedef struct{
 
   float gx_offset;
   float gy_offset;
+  float gz_offset;
 
   float roll_v;
   float pitch_v;
+  float yaw_v;
 
   float dt;
 
   float gyro_roll;
   float gyro_pitch;
+  float gyro_yaw;
 
   float acc_roll;
   float acc_pitch;
 
   float k_roll;
   float k_pitch;
+  float k_yaw;
 
   float e_P[2][2];
 
