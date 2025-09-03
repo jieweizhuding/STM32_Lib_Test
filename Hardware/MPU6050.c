@@ -4,17 +4,6 @@
 // 实际地址为 0x68 << 1 = 0xD0
 #define MPU_ADDR 0xD0
 
-void Delay_ms(uint32_t ms)
-{
-    uint32_t i;
-    while (ms--)
-    {
-        i = 7200;  // 假设系统时钟 72MHz，大约 1ms
-        while (i--);
-    }
-}
-
-
 
 // 向 MPU6050 某寄存器写入 1 字节数据
 void MPU_writeReg(uint8_t Addr, uint8_t Data)
@@ -93,7 +82,6 @@ void MPU6050_init()
   I2C_Cmd(I2C1, ENABLE); // 使能 I2C1
 
   // // 4. MPU6050 芯片配置
-  // Delay_ms(100);
   MPU_writeReg(MPU6050_PWR_MGMT_1, 0x01);  // 选择时钟源
   MPU_writeReg(MPU6050_PWR_MGMT_2, 0x00); // 开启所有传感器
 
@@ -104,34 +92,33 @@ void MPU6050_init()
 }
 
 // 读取 MPU6050 的加速度计与陀螺仪数据
-void MPU_GetData(int16_t *AccX, int16_t *AccY, int16_t *AccZ,
-                 int16_t *GyroX, int16_t *GyroY, int16_t *GyroZ)
+void MPU_GetRaw(MPU6050 *mpu)
 {
   uint8_t Data_H, Data_L;
 
   // --- 加速度计 ---
   Data_H = MPU_readReg(MPU6050_ACCEL_XOUT_H);
   Data_L = MPU_readReg(MPU6050_ACCEL_XOUT_L);
-  *AccX = (Data_H << 8) | Data_L;
+  mpu->AccX = (Data_H << 8) | Data_L;
 
   Data_H = MPU_readReg(MPU6050_ACCEL_YOUT_H);
   Data_L = MPU_readReg(MPU6050_ACCEL_YOUT_L);
-  *AccY = (Data_H << 8) | Data_L;
+  mpu->AccY = (Data_H << 8) | Data_L;
 
   Data_H = MPU_readReg(MPU6050_ACCEL_ZOUT_H);
   Data_L = MPU_readReg(MPU6050_ACCEL_ZOUT_L);
-  *AccZ = (Data_H << 8) | Data_L;
+  mpu->AccZ = (Data_H << 8) | Data_L;
 
   // --- 陀螺仪 ---
   Data_H = MPU_readReg(MPU6050_GYRO_XOUT_H);
   Data_L = MPU_readReg(MPU6050_GYRO_XOUT_L);
-  *GyroX = (Data_H << 8) | Data_L;
+  mpu->GyroX = (Data_H << 8) | Data_L;
 
   Data_H = MPU_readReg(MPU6050_GYRO_YOUT_H);
-  Data_L = MPU_readReg(MPU6050_GYRO_XOUT_L);
-  *GyroY = (Data_H << 8) | Data_L;
+  Data_L = MPU_readReg(MPU6050_GYRO_YOUT_L);
+  mpu->GyroY = (Data_H << 8) | Data_L;
 
   Data_H = MPU_readReg(MPU6050_GYRO_ZOUT_H);
   Data_L = MPU_readReg(MPU6050_GYRO_ZOUT_L);
-  *GyroZ = (Data_H << 8) | Data_L;
+  mpu->GyroZ = (Data_H << 8) | Data_L;
 }
