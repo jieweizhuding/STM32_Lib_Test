@@ -1,3 +1,8 @@
+/*
+update功能需要修改，暂时不要使用
+
+*/
+
 #ifndef _KF_H
 #define _KF_H
 

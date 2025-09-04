@@ -9,8 +9,8 @@ void TIM_init()
   TIM_TimeBaseInitTypeDef TIM_structure;
   TIM_structure.TIM_ClockDivision=TIM_CKD_DIV1;
   TIM_structure.TIM_CounterMode=TIM_CounterMode_Up;
-  TIM_structure.TIM_Period=7200-1;
-  TIM_structure.TIM_Prescaler=10000-1;
+  TIM_structure.TIM_Period=720-1;
+  TIM_structure.TIM_Prescaler=1000-1;
   TIM_structure.TIM_RepetitionCounter=0;
   TIM_TimeBaseInit(TIM2,&TIM_structure);
 

@@ -3,15 +3,17 @@
 //PB6连接SCL,PB7连接SDA
 #include "MPU6050.h"
 
-
 // #include "SERIAL.h"
 
 #include "TIM.h"
-#include "KF.h"
+// #include "KF.h"
+float dt = 0.01f; // 10ms
+float yaw = 0.0f;
 
 MPU6050 mpu;
 MPU_Conv conv;
-KF kf;
+float offset_z = 0.0f;
+// KF kf;
 
 int i=0;
 
@@ -21,32 +23,30 @@ int i=0;
 int main()
 {
     MPU6050_init();
-    TIM_init();
     OLED_Init();
-
-    KF_setDt(&kf,1.0f);
-    KF_init(&kf);
-    KF_setup(&kf,&mpu, &conv);
-    // Serial_init();
-
+    offset_z=MPU_GetOffset_z();  
+    
+    TIM_init();
 
     while (1)
     {
 
-        MPU_GetConv(&mpu, &conv);
-        OLED_ShowString(0, 0, "AX:", OLED_6X8);
-        OLED_ShowFloatNum(30, 0, conv.AccX_g,3,3, OLED_6X8);
-        OLED_ShowString(0, 10, "AY:", OLED_6X8);
-        OLED_ShowFloatNum(30, 10, conv.AccY_g,3,3, OLED_6X8);
-        OLED_ShowString(0, 20, "AZ:", OLED_6X8);
-        OLED_ShowFloatNum(30, 20, conv.AccZ_g, 3,3, OLED_6X8);
-        OLED_ShowString(0, 30, "GX:", OLED_6X8);
-        OLED_ShowFloatNum(30, 30, conv.GyroX_dps, 3,3, OLED_6X8);
-        OLED_ShowString(0, 40, "GY:", OLED_6X8);
-        OLED_ShowFloatNum(30, 40, conv.GyroY_dps, 3,3, OLED_6X8);
-        OLED_ShowString(0, 50, "GZ:", OLED_6X8);
-        OLED_ShowFloatNum(30, 50, conv.GyroZ_dps, 3,3, OLED_6X8);
-        OLED_ShowNum(0, 60, i, 5, OLED_6X8);
+        // OLED_ShowString(0, 0, "AX:", OLED_6X8);
+        // OLED_ShowFloatNum(30, 0, conv.AccX_g,3,3, OLED_6X8);
+        // OLED_ShowString(0, 10, "AY:", OLED_6X8);
+        // OLED_ShowFloatNum(30, 10, conv.AccY_g,3,3, OLED_6X8);
+        // OLED_ShowString(0, 20, "AZ:", OLED_6X8);
+        // OLED_ShowFloatNum(30, 20, conv.AccZ_g, 3,3, OLED_6X8);
+        // OLED_ShowString(0, 30, "GX:", OLED_6X8);
+        // OLED_ShowFloatNum(30, 30, conv.GyroX_dps, 3,3, OLED_6X8);
+        // OLED_ShowString(0, 40, "GY:", OLED_6X8);
+        // OLED_ShowFloatNum(30, 40, conv.GyroY_dps, 3,3, OLED_6X8);
+        // OLED_ShowString(0, 50, "GZ:", OLED_6X8);
+        // OLED_ShowFloatNum(30, 50, conv.GyroZ_dps, 3,3, OLED_6X8);
+        // OLED_ShowNum(0, 60, i, 5, OLED_6X8);
+
+        OLED_ShowFloatNum(0, 0, conv.GyroZ_dps, 6,2, OLED_6X8);
+        OLED_ShowFloatNum(0, 10, yaw, 6,2, OLED_6X8);
         OLED_Update();
 
 
@@ -81,7 +81,13 @@ void TIM2_IRQHandler()
 {
     if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
     {
-        KF_update(&kf,&mpu, &conv);
+        // KF_update(&kf,&mpu, &conv);
+        MPU_GetConv(&mpu, &conv);
+        yaw += ((conv.GyroZ_dps-offset_z) * dt);
+        if (yaw > 180.0f)
+            yaw -= 360.0f;
+        else if (yaw < -180.0f)
+            yaw += 360.0f;
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
     }
 }

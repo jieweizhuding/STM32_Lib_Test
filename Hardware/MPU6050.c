@@ -134,3 +134,17 @@ void MPU_GetConv(MPU6050 *mpu, MPU_Conv *conv)
   conv->GyroY_dps = mpu->GyroY / 131.0f;
   conv->GyroZ_dps = mpu->GyroZ / 131.0f;
 }
+
+float MPU_GetOffset_z(){
+
+  MPU6050 mpu;
+  MPU_Conv conv;
+  float offset = 0;
+  for(int i=0;i<100;i++){
+    MPU_GetConv(&mpu, &conv);
+    offset += conv.GyroZ_dps;
+    for(int j=0;j<10000;j++);
+  }
+  offset /= 100.0f;
+  return offset;
+}

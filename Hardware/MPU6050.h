@@ -39,6 +39,6 @@ void MPU_writeReg(uint8_t Addr, uint8_t Data);
 uint8_t MPU_readReg(uint8_t Addr);
 void MPU_GetRaw(MPU6050 *mpu);
 void MPU_GetConv(MPU6050 *mpu, MPU_Conv *conv);
-void MPU_GetAng(MPU6050 *mpu);
+float MPU_GetOffset_z();
 
 #endif
